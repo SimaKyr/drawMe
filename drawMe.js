@@ -42,9 +42,9 @@ canvas.onmouseup = function(){
 canvas.onmousedown = function(){
 	draw=true;
 }
-canvas.ontouchmove = canvas.onmousemove;
-canvas.ontouchstart = canvas.onmousedown;
-canvas.ontouchend = canvas.onmouseup;
+canvas.addEventListener("touchmove", canvas.onmousemove, false);
+canvas.addEventListener("touchstart", canvas.onmousedown, false);
+canvas.addEventListener("touchend", canvas.onmouseup, false);
 
 function sendToServer(){
 	set('canvas',canvas.toDataURL());
