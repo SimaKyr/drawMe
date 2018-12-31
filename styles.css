@@ -1,0 +1,40 @@
+#canvas{
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+body, html{
+	text-align: center;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	border: 0;
+	overflow: hidden;
+}
+#loadimg{
+	display: none;
+}
+#color{
+	position: absolute;
+	bottom:0;
+	left:0;
+	width: 15%;
+}
+.color{
+	position: absolute;
+	bottom:2%;
+	left:0;
+	width: 15%;
+}
+#size{
+	position: absolute;
+	bottom:7%;
+	left:0;
+	width: 15%;
+}
+.size{
+	position: absolute;
+	bottom:9%;
+	left:0;
+	width: 15%;
+}
