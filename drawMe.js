@@ -6,6 +6,8 @@ var img = document.getElementById('loadimg');
 var color = document.getElementById('color');
 var size = document.getElementById('size');
 
+var live = true;
+
 function generateUserID(){
 	date = new Date;
 	return date.toString();
@@ -109,12 +111,18 @@ yMouse -= canvas.offsetTop;
 
 c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+if(live){
+sendToServer();
+loadFromServer();
+}
 	}
 }
 canvas.onmouseup = function(){
 	draw=false;
+	if(!live){
 sendToServer();
 loadFromServer();
+}
 
 }
 canvas.onmousedown = function(){
