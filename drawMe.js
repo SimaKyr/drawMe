@@ -30,7 +30,7 @@ canvas.onmousemove = function(e){
 	if(draw){
 	var xMouse = e.clientX-180;
 	var yMouse = e.clientY;
-c.fillStyle = '#' + decimalToHexString(color.value).toString();
+c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
 c.fillRect(xMouse, yMouse, size.value, size.value);
 	}
 }
