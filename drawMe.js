@@ -6,6 +6,9 @@ var img = document.getElementById('loadimg');
 var color = document.getElementById('color');
 var size = document.getElementById('size');
 var live = document.getElementById('chcboxlive');
+var fchat = document.getElementById('fchat');
+
+var settings = document.getElementById('settings');
 
 function generateUserID(){
 	date = new Date;
@@ -72,6 +75,10 @@ function matchOnline(){
 	return out;
 }
 
+color.onchange = function(){
+	color.style.backgroundColor = '#' + decimalToHexString(Number(color.value)).toString();
+}
+
 var draw = false;
 
 function decimalToHexString(number)
@@ -135,8 +142,31 @@ function sendToServer(){
 	set('canvas',canvas.toDataURL());
 }
 
+fchat.onkeyup = function(e){
+	if(!fchat.value==''){
+	if (e.keyCode == 13) {
+		set('chat/length',(Number(get['chat'].length)+1).toString());
+		set('chat/' + get['chat'].length, get[guid].nickname + ': ' + fchat.value);
+		loadList('chat',getChat());
+		fchat.value='';
+	}
+	}
+}
+
+function getChat(){
+	var ch = get['chat'];
+	var i=0;
+	var out=[];
+	while(i-1!=ch.length){
+		out[i]=ch[i];
+		i++;
+	}
+	return out;
+}
+
 var timOnl = setInterval(function(){
 loadList('onlinetab',matchOnline());
+loadList('chat',getChat());
 },500);
 
 
