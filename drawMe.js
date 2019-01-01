@@ -62,7 +62,7 @@ function matchOnline(){
 	var out = [];
 	var hel;
 	var lenghtmax = Number(get['guid'].length)
-	while(i!=lenghtmax){
+	while(i!=lenghtmax+1){
 		if(get[get['guid'][i]].online == 'true'){
 		out[c]=get[get['guid'][i]].nickname;
 		c++;
