@@ -169,7 +169,6 @@ loadList('onlinetab',matchOnline());
 loadList('chat',getChat());
 },500);
 
-
 var tim = setInterval(function(){
 if(!draw){loadFromServer();}
 },20);
