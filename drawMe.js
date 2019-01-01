@@ -49,4 +49,13 @@ canvas.addEventListener("touchend", canvas.onmouseup, false);
 function sendToServer(){
 	set('canvas',canvas.toDataURL());
 }
-},2500);
+}
+var tim = setInterval(function(){
+if(!draw){
+	loadFromServer();
+}
+	
+}
+,10);
+
+,2500);
