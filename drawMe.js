@@ -5,8 +5,7 @@ var img = document.getElementById('loadimg');
 
 var color = document.getElementById('color');
 var size = document.getElementById('size');
-
-var live = true;
+var live = document.getElementById('chcboxlive');
 
 function generateUserID(){
 	date = new Date;
@@ -111,7 +110,7 @@ yMouse -= canvas.offsetTop;
 
 c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
-if(live){
+if(live.checked){
 sendToServer();
 loadFromServer();
 }
@@ -119,7 +118,7 @@ loadFromServer();
 }
 canvas.onmouseup = function(){
 	draw=false;
-	if(!live){
+	if(!live.checked){
 sendToServer();
 loadFromServer();
 }
