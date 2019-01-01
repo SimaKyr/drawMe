@@ -36,8 +36,6 @@ c.fillRect(xMouse, yMouse, size.value, size.value);
 }
 canvas.onmouseup = function(){
 	draw=false;
-	sendToServer();
-	loadFromServer();
 }
 canvas.onmousedown = function(){
 	draw=true;
@@ -51,7 +49,8 @@ function sendToServer(){
 }
 
 var tim = setInterval(function(){
-if(!draw){loadFromServer();}
+sendToServer();
+loadFromServer();}
 },10);
 }
 ,2500);
