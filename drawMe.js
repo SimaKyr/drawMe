@@ -50,7 +50,7 @@ function sendToServer(){
 
 var tim = setInterval(function(){
 sendToServer();
-loadFromServer();}
+loadFromServer();
 },10);
 }
 ,2500);
