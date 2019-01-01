@@ -50,6 +50,7 @@ canvas.onmouseup = function(){
 	draw=false;
 sendToServer();
 loadFromServer();
+
 }
 canvas.onmousedown = function(){
 	draw=true;
