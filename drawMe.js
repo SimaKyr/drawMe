@@ -28,14 +28,28 @@ loadFromServer();
 
 canvas.onmousemove = function(e){
 	if(draw){
-	var xMouse = e.clientX-180;
-	var yMouse = e.clientY;
+		
+var xMouse;
+var yMouse;
+if (e.pageX || e.pageY) { 
+  xMouse = e.pageX;
+  yMouse = e.pageY;
+}
+else { 
+  xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+  yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+} 
+xMouse -= canvas.offsetLeft;
+yMouse -= canvas.offsetTop;
+
 c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
-c.fillRect(xMouse, yMouse, size.value, size.value);
+c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
 	}
 }
 canvas.onmouseup = function(){
 	draw=false;
+sendToServer();
+loadFromServer();
 }
 canvas.onmousedown = function(){
 	draw=true;
@@ -49,9 +63,7 @@ function sendToServer(){
 }
 
 var tim = setInterval(function(){
-sendToServer();
-loadFromServer();
-
-},10);
+if(!draw){loadFromServer();}
+},20);
 }
 ,2500);
