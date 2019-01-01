@@ -6,6 +6,37 @@ var img = document.getElementById('loadimg');
 var color = document.getElementById('color');
 var size = document.getElementById('size');
 
+function generateUserID(){
+	date = new Date;
+	return date.toString();
+}
+
+if(localStorage['guid'] == undefined){
+localStorage['guid'] = generateUserID();
+
+var guid = localStorage['guid'];
+
+var result = prompt('Enter nickname:', 'anonymous');
+set(guid + '/nickname', result);
+set(guid + '/online', 'true');
+set('guid' + '/length', (Number(get['guid'].length) + 1).toString());
+set('guid/' + get['guid'].length,guid);
+nickname = result;
+}else{
+	var guid = localStorage['guid'];
+	nickname = get[guid + '/nickname'];
+	set(guid + '/online', 'true');
+}
+
+var guid = localStorage['guid'];
+
+window.onbeforeunload = closingCode;
+
+function closingCode(){
+   set(guid + '/online', 'false');
+   return null;
+}
+
 var draw = false;
 
 function decimalToHexString(number)
