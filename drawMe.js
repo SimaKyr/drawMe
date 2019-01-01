@@ -54,7 +54,6 @@ var tim = setInterval(function(){
 if(!draw){
 	loadFromServer();
 }
-	
 }
 ,10);
 
