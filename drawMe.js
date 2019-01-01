@@ -37,6 +37,40 @@ function closingCode(){
    return null;
 }
 
+function appendToElText(id,texta){
+	var elm = document.getElementById(id);
+	
+	var txt = document.createElement('p');
+	txt.innerText = texta;
+	
+	elm.appendChild(txt);
+}
+
+function loadList(id,list){
+	var li = document.getElementById(id);
+	li.innerHTML='';
+	var i=0;
+	while(i!=list.length){
+		appendToElText(id, list[i])
+		i++;
+	}
+}
+function matchOnline(){
+	var i=0;
+	var c=0;
+	var out = [];
+	var hel;
+	var lenghtmax = Number(get['guid'].length)
+	while(i!=lenghtmax){
+		if(get[get['guid'][i]].online == 'true'){
+		out[c]=get[get['guid'][i]].nickname;
+		c++;
+		}
+		i++;
+	}
+	return out;
+}
+
 var draw = false;
 
 function decimalToHexString(number)
@@ -93,6 +127,11 @@ canvas.addEventListener("touchend", canvas.onmouseup, false);
 function sendToServer(){
 	set('canvas',canvas.toDataURL());
 }
+
+var timOnl = setInterval(function(){
+loadList('onlinetab',matchOnline());
+},500);
+
 
 var tim = setInterval(function(){
 if(!draw){loadFromServer();}
