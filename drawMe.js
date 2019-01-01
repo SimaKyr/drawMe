@@ -6,9 +6,38 @@ var img = document.getElementById('loadimg');
 var color = document.getElementById('color');
 var size = document.getElementById('size');
 var live = document.getElementById('chcboxlive');
+
 var fchat = document.getElementById('fchat');
+var chat = document.getElementById('chat');
 
 var settings = document.getElementById('settings');
+
+var instrument = 'pen';
+
+var pen = document.getElementById('pen');
+var erase = document.getElementById('erase');
+var picker = document.getElementById('picker');
+var fill = document.getElementById('fill');
+var rectangle = document.getElementById('rectangle');
+var percent = document.getElementById('percent');
+
+var sinstrument = document.getElementById('selectedinstrument');
+
+function setInstument(inst){
+	instrument = inst;
+	sinstrument.src = 'img/' + inst + '.png';
+	
+}
+
+color.style.backgroundColor = '#82b1ff';
+size.style.backgroundColor = '#82b1ff';
+
+pen.onclick = function(){ setInstument('pen'); }
+erase.onclick = function(){ setInstument('erase'); }
+picker.onclick = function(){ setInstument('picker'); }
+fill.onclick = function(){ setInstument('fill'); }
+rectangle.onclick = function(){ setInstument('rectangle'); }
+percent.onclick = function(){ setInstument('percent'); }
 
 function generateUserID(){
 	date = new Date;
@@ -115,8 +144,15 @@ else {
 xMouse -= canvas.offsetLeft;
 yMouse -= canvas.offsetTop;
 
+if(instrument == 'pen'){
 c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+}
+if(instrument == 'erase'){
+c.fillStyle = '#ffffff';
+c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+}
+
 if(live.checked){
 sendToServer();
 loadFromServer();
@@ -131,8 +167,28 @@ loadFromServer();
 }
 
 }
-canvas.onmousedown = function(){
+canvas.onmousedown = function(e){
 	draw=true;
+	
+var xMouse;
+var yMouse;
+if (e.pageX || e.pageY) { 
+  xMouse = e.pageX;
+  yMouse = e.pageY;
+}
+else { 
+  xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+  yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+} 
+xMouse -= canvas.offsetLeft;
+yMouse -= canvas.offsetTop;
+
+	if(instrument == 'picker'){
+		
+		color.value = getColor(xMouse,yMouse);
+		color.style.backgroundColor = '#' + decimalToHexString(Number(color.value)).toString();
+	}
+
 }
 canvas.addEventListener("touchmove", canvas.onmousemove, false);
 canvas.addEventListener("touchstart", canvas.onmousedown, false);
@@ -149,6 +205,7 @@ fchat.onkeyup = function(e){
 		set('chat/' + get['chat'].length, get[guid].nickname + ': ' + fchat.value);
 		loadList('chat',getChat());
 		fchat.value='';
+		chat.lastElementChild.scrollIntoView()
 	}
 	}
 }
@@ -162,6 +219,12 @@ function getChat(){
 		i++;
 	}
 	return out;
+}
+
+function getColor(x,y){
+var p = c.getImageData(x, y, 1, 1).data;
+bbb = p;
+return p[2] * 65536 + p[1] * 256 + p[0];
 }
 
 var timOnl = setInterval(function(){

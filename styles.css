@@ -189,3 +189,11 @@ input[type=range]:focus::-ms-fill-upper {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+#icons8{
+	right:0;
+	position: absolute;
+	bottom:0;
+}
+#instruments img{
+	height:24px;
+}
