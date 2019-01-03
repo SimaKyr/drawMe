@@ -45,6 +45,7 @@ body, html{
 #settings *{
 	margin: 2px;
 }
+#settings input{ margin: 0px; }
 
 #chat{
 	position: fixed;

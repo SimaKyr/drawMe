@@ -114,11 +114,8 @@ function matchOnline(){
 	return out;
 }
 
-color.onmousemove = function(){
-	color.style.backgroundColor = '#' + decimalToHexString(Number(color.value)).toString();
-}
 color.onchange = function(){
-	set(guid + '/color','#' + decimalToHexString(Number(color.value)).toString());
+	set(guid + '/color',color.value);
 }
 
 size.onchange = function(){
@@ -172,7 +169,7 @@ xMouse -= canvas.offsetLeft;
 yMouse -= canvas.offsetTop;
 
 if(instrument == 'pen'){
-c.fillStyle = '#' + decimalToHexString(Number(color.value)).toString();
+c.fillStyle = color.value;
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
 }
 if(instrument == 'erase'){
@@ -213,7 +210,7 @@ yMouse -= canvas.offsetTop;
 	if(instrument == 'picker'){
 		
 		color.value = getColor(xMouse,yMouse);
-		color.style.backgroundColor = '#' + decimalToHexString(Number(color.value)).toString();
+		color.style.backgroundColor = color.value;
 	}
 
 }
