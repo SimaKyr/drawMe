@@ -6,6 +6,7 @@ var img = document.getElementById('loadimg');
 var color = document.getElementById('color');
 var size = document.getElementById('size');
 var live = document.getElementById('chcboxlive');
+var curs = document.getElementById('curs');
 
 var fchat = document.getElementById('fchat');
 var chat = document.getElementById('chat');
@@ -23,14 +24,19 @@ var percent = document.getElementById('percent');
 
 var sinstrument = document.getElementById('selectedinstrument');
 
+var cursors = document.getElementById('cursors');
+
+var oldChat = [];
+var chatV;
+
 function setInstument(inst){
 	instrument = inst;
 	sinstrument.src = 'img/' + inst + '.png';
 	
 }
 
-color.style.backgroundColor = '#82b1ff';
 size.style.backgroundColor = '#82b1ff';
+
 
 pen.onclick = function(){ setInstument('pen'); }
 erase.onclick = function(){ setInstument('erase'); }
@@ -57,13 +63,17 @@ set('guid/' + get['guid'].length,guid);
 nickname = result;
 }else{
 	var guid = localStorage['guid'];
-	nickname = get[guid + '/nickname'];
+	nickname = get[guid].nickname;
 	set(guid + '/online', 'true');
 }
 
 var guid = localStorage['guid'];
 
 window.onbeforeunload = closingCode;
+
+color.style.backgroundColor = get[guid].color;
+
+size.style.value = get[guid].size;
 
 function closingCode(){
    set(guid + '/online', 'false');
@@ -104,8 +114,15 @@ function matchOnline(){
 	return out;
 }
 
-color.onchange = function(){
+color.onmousemove = function(){
 	color.style.backgroundColor = '#' + decimalToHexString(Number(color.value)).toString();
+}
+color.onchange = function(){
+	set(guid + '/color','#' + decimalToHexString(Number(color.value)).toString());
+}
+
+size.onchange = function(){
+	set(guid + '/size', size.value);
 }
 
 var draw = false;
@@ -127,6 +144,16 @@ img.onload = function(){c.drawImage(img,0,0);}
 }
 
 loadFromServer();
+
+document.onmousemove = function(e){
+	if(curs.checked){
+set('users/'+nickname + '/x',e.pageX);
+set('users/'+nickname + '/y',e.pageY);
+set('users/'+nickname + '/mouse',true);
+	}else{
+	set('users/'+nickname + '/mouse',false);	
+	}
+}
 
 canvas.onmousemove = function(e){
 	if(draw){
@@ -205,7 +232,7 @@ fchat.onkeyup = function(e){
 		set('chat/' + get['chat'].length, get[guid].nickname + ': ' + fchat.value);
 		loadList('chat',getChat());
 		fchat.value='';
-		chat.lastElementChild.scrollIntoView()
+		chat.lastElementChild.scrollIntoView();
 	}
 	}
 }
@@ -224,16 +251,53 @@ function getChat(){
 function getColor(x,y){
 var p = c.getImageData(x, y, 1, 1).data;
 bbb = p;
-return p[2] * 65536 + p[1] * 256 + p[0];
+return (p[0] * 65536) + (p[1] * 256) + p[2];
 }
+
+function createCursor(x,y,nik){
+	var k = document.createElement('div');
+	k.innerHTML='<img src="img/cursor.png"><p>' + nik + '</p>';
+	k.className = 'cursor';
+	k.style.left = x-24 + 'px';
+	k.style.top = y + 'px';
+	document.body.appendChild(k);
+}
+
+function showCursors(){
+	var ceo;
+	ceo = matchOnline();
+	var i=0;
+	deleteCursors();
+	while(i!=ceo.length){
+		if(get['users'][ceo[i]] !=undefined){
+		if(ceo[i]!=nickname){
+		if(get['users'][ceo[i]].mouse){
+		createCursor(get['users'][ceo[i]].x,get['users'][ceo[i]].y,ceo[i]);
+		}}}
+	i++;
+	}
+}
+
+function deleteCursors(){
+var paras = document.getElementsByClassName('cursor');
+
+while(paras[0]) {
+    paras[0].parentNode.removeChild(paras[0]);
+}}
 
 var timOnl = setInterval(function(){
 loadList('onlinetab',matchOnline());
+chatV = getChat();
+if(chatV!=oldChat){
 loadList('chat',getChat());
+oldChat = chatV;
+chat.lastElementChild.scrollIntoView();
+}
 },500);
 
 var tim = setInterval(function(){
 if(!draw){loadFromServer();}
+if(curs.checked){showCursors();}
 },20);
 }
 ,2500);

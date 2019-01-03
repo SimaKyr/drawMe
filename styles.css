@@ -18,7 +18,7 @@ body, html{
 
 
 #onlinetab{
-	position: absolute;
+	position: fixed;
 	top:0;
 	right:0;
 	background: #82b1ff;
@@ -30,7 +30,7 @@ body, html{
 	margin: 10px;
 }
 #settings{
-	position: absolute;
+	position: fixed;
 	top:0;
 	left:0;
 	width: 10%;
@@ -42,26 +42,30 @@ body, html{
 	margin: 10px;
 }
 
+#settings *{
+	margin: 2px;
+}
+
 #chat{
-	position: absolute;
+	position: fixed;
 	bottom:0;
 	left:0;
 	background: #82b1ff;
 	border-radius: 10px;
 	margin: 10px;
-	height: 30%;
-	width:10%;
+	height: 40%;
+	width:13%;
 	overflow:scroll;
 }
 
 #fchat{
-position: absolute;
+position: fixed;
 background: #fff;
 border: 0;
-bottom:1px;
+bottom:2px;
 left:0;
 height: 3%;
-width:10%;
+width:13%;
 margin: 10px;
 border-radius: 10px;
 }
@@ -164,7 +168,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .online{
-	position: absolute;
+	position: fixed;
 	top: 1.5%;
 	right:4%;
 	color: #fff;
@@ -191,9 +195,25 @@ input[type=range]:focus::-ms-fill-upper {
 }
 #icons8{
 	right:0;
-	position: absolute;
+	position: fixed;
 	bottom:0;
 }
 #instruments img{
 	height:24px;
+}
+.cursor{
+	position: fixed;
+	z-index: 10;
+	padding:0;
+	margin:0;
+}
+.cursor p{
+	font-size:10px;
+}
+.cursor img{
+	height: 24px;
+}
+.cursor *{
+	padding:0;
+	margin:0;
 }
