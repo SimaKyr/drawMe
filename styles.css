@@ -367,6 +367,7 @@ input[type=text]{
 	padding-right: 5%;
 }*/
 
+
 @media only screen and (max-device-width : 640px) {
 #selectedinstrument{
 	height: 32px;
