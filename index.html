@@ -25,18 +25,29 @@
   firebase.database().ref().on('value', snap => get = snap.val());
 	</script>
 	</head>
-	<body>
+	<body ondragstart="return false;">
 	<canvas id="canvas" height="576" width="1024"></canvas>
 	<script src="drawMe.js"></script>
 	<img id="loadimg">
 	<div id="settings">
-	<h2>Settings</h2>
-	<input type="checkbox" id="chcboxlive">Live?</p>
-	<input type="checkbox" id="curs" checked>Show for other cursor?</p>
+	<h2>Menu</h2>
+	<img src="img/settings.png" id="setupop">
 	<p>Color</p>
-	<input type="color" id="color" min="0" max="16777216">
+	<div id="styfcolor"><input type="color" id="color"></div>
 	<p>Size</p>
 	<input type="range" id="size" min="1" max="100">
+	
+	<div id="setup" class="close">
+	<h2>Setup</h2>
+	<input type="checkbox" id="chcboxlive">Live?</p>
+	<input type="checkbox" id="curs" checked>Cursor?</p>
+	<input type="checkbox" id="chaten" checked>Chat enabled?</p>
+	<input type="checkbox" id="onlineen" checked>Show online?</p>
+	<input id="nickset" value="">
+	<button id="sNick">Change nickname</button><br>
+	<button id="creditsget">Credits</button>
+	<button id="clsSetup">Close</button>
+	</div>
 	
 	<div id="instruments">
 	<img src="img/pen.png" id="pen">
@@ -52,13 +63,12 @@
 	<div id="onlinetab">
 	</div>
 	
-	<p class="online">Online</p>
+	<p class="online" id="onltext">Online</p>
 	
 	<div id="chat">
 	
 	</div>
 	<input id="fchat">
-	<a href="https://icons8.com" id="icons8">Link to Icons8</a>
 	
 	</body>
 	<body>

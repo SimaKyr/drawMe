@@ -24,10 +24,40 @@ var percent = document.getElementById('percent');
 
 var sinstrument = document.getElementById('selectedinstrument');
 
-var cursors = document.getElementById('cursors');
+var nickset = document.getElementById('nickset');
+
+var sNick = document.getElementById('sNick');
+var creditsget = document.getElementById('creditsget');
+var clsSetup = document.getElementById('clsSetup');
+
+var setupop = document.getElementById('setupop');
+
+var setup = document.getElementById('setup');
+
+var chaten = document.getElementById('chaten');
+var onlineen = document.getElementById('onlineen');
+
+var styfcolor = document.getElementById('styfcolor');
 
 var oldChat = [];
 var chatV;
+
+var onltext = document.getElementById('onltext');
+
+setupop.onclick = function(){
+	if(setup.className == 'close'){
+		setup.className = '';
+	}else{
+		setup.className = 'close';
+	}
+}
+
+clsSetup.onclick = setupop.onclick;
+
+creditsget.onclick = function(){
+alert("Icons by - Icons8, see https://icons8.com");
+}
+
 
 function setInstument(inst){
 	instrument = inst;
@@ -50,12 +80,28 @@ function generateUserID(){
 	return date.toString();
 }
 
+function openFullscreen(elemF) {
+  if (elemF.requestFullscreen) {
+    elemF.requestFullscreen();
+  } else if (elemF.mozRequestFullScreen) { /* Firefox */
+    elemF.mozRequestFullScreen();
+  } else if (elemF.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elemF.webkitRequestFullscreen();
+  } else if (elemF.msRequestFullscreen) { /* IE/Edge */
+    elemF.msRequestFullscreen();
+  }
+}
+
 if(localStorage['guid'] == undefined){
 localStorage['guid'] = generateUserID();
 
 var guid = localStorage['guid'];
 
 var result = prompt('Enter nickname:', 'anonymous');
+if(prompt.length < 3){
+	result = randNick();
+}
+
 set(guid + '/nickname', result);
 set(guid + '/online', 'true');
 set('guid' + '/length', (Number(get['guid'].length) + 1).toString());
@@ -67,11 +113,20 @@ nickname = result;
 	set(guid + '/online', 'true');
 }
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
 var guid = localStorage['guid'];
 
 window.onbeforeunload = closingCode;
 
-color.style.backgroundColor = get[guid].color;
+styfcolor.style.backgroundColor = get[guid].color;
 
 size.style.value = get[guid].size;
 
@@ -79,6 +134,46 @@ function closingCode(){
    set(guid + '/online', 'false');
    return null;
 }
+
+if(get[localStorage['guid']].chaten == undefined){
+	set(localStorage['guid'] + '/chaten',true);
+	set(localStorage['guid'] + '/onlineen',true);
+	set(localStorage['guid'] + '/cusor', true);
+}
+
+curs.checked = get[localStorage['guid']].cusor;
+onlineen.checked = get[localStorage['guid']].onlineen;
+chaten.checked = get[localStorage['guid']].chaten;
+
+curs.onchange = function(){ deleteCursors(); set(localStorage['guid'] + '/cusor',curs.checked);}
+chaten.onchange = function(){
+	set(localStorage['guid'] + '/chaten',chaten.checked);
+	hideChatOrOnline();
+}
+onlineen.onchange = function(){
+	set(localStorage['guid'] + '/onlineen',onlineen.checked);
+	hideChatOrOnline();
+	
+}
+
+function hideChatOrOnline(){
+	if(onlineen.checked){
+		onlinetab.className = '';
+		onltext.className = '';
+	}else{
+		onlinetab.className = 'close';
+		onltext.className = 'close';
+	}
+	if(chaten.checked){
+		fchat.className = '';
+		chat.className = '';
+	}else{
+		fchat.className = 'close';
+		chat.className = 'close';	
+	}
+}
+
+hideChatOrOnline();
 
 function appendToElText(id,texta){
 	var elm = document.getElementById(id);
@@ -116,6 +211,7 @@ function matchOnline(){
 
 color.onchange = function(){
 	set(guid + '/color',color.value);
+	styfcolor.style.backgroundColor = color.value;
 }
 
 size.onchange = function(){
@@ -142,7 +238,7 @@ img.onload = function(){c.drawImage(img,0,0);}
 
 loadFromServer();
 
-document.onmousemove = function(e){
+document.onpointermove = function(e){
 	if(curs.checked){
 set('users/'+nickname + '/x',e.pageX);
 set('users/'+nickname + '/y',e.pageY);
@@ -152,18 +248,21 @@ set('users/'+nickname + '/mouse',true);
 	}
 }
 
-canvas.onmousemove = function(e){
+canvas.onpointermove = function(e){
 	if(draw){
 		
 var xMouse;
 var yMouse;
-if (e.pageX || e.pageY) { 
-  xMouse = e.pageX;
-  yMouse = e.pageY;
+var t;
+t = e;
+
+if (t.pageX || t.pageY) { 
+  xMouse = t.pageX;
+  yMouse = t.pageY;
 }
 else { 
-  xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-  yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+  xMouse = t.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+  yMouse = t.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
 } 
 xMouse -= canvas.offsetLeft;
 yMouse -= canvas.offsetTop;
@@ -173,7 +272,7 @@ c.fillStyle = color.value;
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
 }
 if(instrument == 'erase'){
-c.fillStyle = '#ffffff';
+	c.fillStyle = '#ffffff';
 c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
 }
 
@@ -183,7 +282,7 @@ loadFromServer();
 }
 	}
 }
-canvas.onmouseup = function(){
+canvas.onpointerup = function(){
 	draw=false;
 	if(!live.checked){
 sendToServer();
@@ -191,32 +290,42 @@ loadFromServer();
 }
 
 }
-canvas.onmousedown = function(e){
+canvas.onpointerdown = function(e){
 	draw=true;
 	
 var xMouse;
 var yMouse;
-if (e.pageX || e.pageY) { 
-  xMouse = e.pageX;
-  yMouse = e.pageY;
+var t;
+t = e;
+
+if (t.pageX || t.pageY) { 
+  xMouse = t.pageX;
+  yMouse = t.pageY;
 }
 else { 
-  xMouse = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-  yMouse = e.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
+  xMouse = t.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
+  yMouse = t.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
 } 
 xMouse -= canvas.offsetLeft;
 yMouse -= canvas.offsetTop;
 
+if(instrument == 'pen'){
+c.fillStyle = color.value;
+c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+}
+
+if(instrument == 'erase'){
+c.fillStyle = '#ffffff';
+c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+}
+
 	if(instrument == 'picker'){
 		
-		color.value = getColor(xMouse,yMouse);
-		color.style.backgroundColor = color.value;
+		color.value = decimalToHexString(getColor(xMouse,yMouse));
+		styfcolor.style.backgroundColor = color.value;
 	}
-
+c.fillStyle = color.value;
 }
-canvas.addEventListener("touchmove", canvas.onmousemove, false);
-canvas.addEventListener("touchstart", canvas.onmousedown, false);
-canvas.addEventListener("touchend", canvas.onmouseup, false);
 
 function sendToServer(){
 	set('canvas',canvas.toDataURL());
@@ -248,7 +357,7 @@ function getChat(){
 function getColor(x,y){
 var p = c.getImageData(x, y, 1, 1).data;
 bbb = p;
-return (p[0] * 65536) + (p[1] * 256) + p[2];
+return rgbToHex(p[0],p[1],p[2]);
 }
 
 function createCursor(x,y,nik){
@@ -275,6 +384,29 @@ function showCursors(){
 	}
 }
 
+function randW(){
+	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);	
+}
+
+function randNick(){
+var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}
+}
+
+function findNickname(niks){
+	var i=0;
+	while(get['guid'].length!=i){
+		if(get[get['guid'][i]].nickname == undefined){
+		set(get['guid'][i] + '/nickname',randNick());	
+		}
+		
+		if(get[get['guid'][i]].nickname == niks){
+			return false;
+		}
+		i++;
+	}
+	return true;
+}
+
 function deleteCursors(){
 var paras = document.getElementsByClassName('cursor');
 
@@ -282,10 +414,23 @@ while(paras[0]) {
     paras[0].parentNode.removeChild(paras[0]);
 }}
 
+nickset.value = nickname;
+
+sNick.onclick = function(){
+	if(findNickname()){
+		nickname = nickset.value;
+		set(localStorage['guid'] + '/nickname',nickname);
+	}
+	else{
+		alert('It nickname use other people')
+	}
+}
+
+
 var timOnl = setInterval(function(){
 loadList('onlinetab',matchOnline());
 chatV = getChat();
-if(chatV!=oldChat){
+if(chatV.length!=oldChat.length){
 loadList('chat',getChat());
 oldChat = chatV;
 chat.lastElementChild.scrollIntoView();
