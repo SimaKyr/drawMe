@@ -37,19 +37,6 @@
 	<p>Size</p>
 	<input type="range" id="size" min="1" max="100">
 	
-	
-	<div id="setup" class="close">
-	<h2>Setup</h2>
-	<input type="checkbox" id="chcboxlive">Live?</p>
-	<input type="checkbox" id="curs" checked>Cursor?</p>
-	<input type="checkbox" id="chaten" checked>Chat enabled?</p>
-	<input type="checkbox" id="onlineen" checked>Show online?</p>
-	<input id="nickset" value="">
-	<button id="sNick">Change nickname</button><br>
-	<button id="creditsget">Credits</button>
-	<button id="clsSetup">Close</button>
-	</div>
-	
 	<div id="instruments">
 	<img src="img/pen.png" id="pen">
 	<img src="img/erase.png" id="erase">
@@ -70,6 +57,37 @@
 	
 	</div>
 	<input id="fchat">
-	
+	<div id="setup" class="close">
+	<h2>Settings</h2>
+			<p>Live?</p>
+			<label class="switch">
+			  <input type="checkbox" id="chcboxlive">
+			  <span class="slider round"></span>
+			</label>
+			
+			<p>Cursor?</p>
+			<label class="switch">
+			  <input type="checkbox" id="curs">
+			  <span class="slider round"></span>
+			</label>
+			
+			<p>Chat enabled?</p>
+			<label class="switch">
+			  <input type="checkbox" id="chaten">
+			  <span class="slider round"></span>
+			</label>
+			
+			<p>Show online?</p>
+			<label class="switch">
+			  <input type="checkbox" id="onlineen">
+			  <span class="slider round"></span>
+			</label>
+	<div id="othSetup">		
+	<input id="nickset" value="" type="text">
+	<button id="sNick">Change nickname</button><br>
+	<button id="creditsget">Credits</button>
+	<button id="clsSetup">Close</button>
+	</div>
+	</div>
 	</body>
 	<body>
