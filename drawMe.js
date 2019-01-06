@@ -186,6 +186,7 @@ if(get[guid] == undefined){rst();}
 window.onbeforeunload = closingCode;
 
 styfcolor.style.backgroundColor = get[guid].color;
+color.value = get[guid].color;
 
 size.value = get[guid].size;
 
