@@ -24,6 +24,14 @@ String.prototype.hexDecode = function(){
 }
 
 setTimeout(function(){
+function download(text, name, type) {
+  var a = document.getElementById("a");
+  var file = new Blob([text], {type: type});
+  a.href = URL.createObjectURL(file);
+  a.download = name;
+  a.click();
+}
+
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
 var img = document.getElementById('loadimg');
@@ -56,6 +64,8 @@ var creditsget = document.getElementById('creditsget');
 var clsSetup = document.getElementById('clsSetup');
 
 var setupop = document.getElementById('setupop');
+var saveop = document.getElementById('saveop');
+var fullscreenop = document.getElementById('fullscreenop');
 
 var setup = document.getElementById('setup');
 
@@ -77,6 +87,18 @@ var continueThisDevice = document.getElementById('continueThisDevice');
 var createVip = document.getElementById('createVip');
 
 var guid;
+
+saveop.onclick = function(){
+	canvas.toBlob(function(blob){
+	a.href = URL.createObjectURL(blob);
+	a.download = 'YouArtwork';
+	a.click();
+	},'image/png',1);
+}
+
+fullscreenop.onclick = function(){
+	openFullscreen(document.body);
+}
 
 continueOnOtherDevice.onclick = function(){
 prompt('Don\'t give it code to other people!',localStorage['guid'].hexEncode());
@@ -439,7 +461,7 @@ function createCursor(x,y,nik){
 	var k = document.createElement('div');
 	k.innerHTML='<img src="img/cursor.png"><p>' + nik + '</p>';
 	k.className = 'cursor';
-	k.style.left = x + 'px';
+	k.style.left = x-14 + 'px';
 	k.style.top = y + 'px';
 	document.body.appendChild(k);
 }
