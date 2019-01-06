@@ -1,3 +1,28 @@
+function rst(){ localStorage.clear();location.reload(); }
+
+String.prototype.hexEncode = function(){
+    var hex, i;
+
+    var result = "";
+    for (i=0; i<this.length; i++) {
+        hex = this.charCodeAt(i).toString(16);
+        result += ("000"+hex).slice(-4);
+    }
+
+    return result
+}
+
+String.prototype.hexDecode = function(){
+    var j;
+    var hexes = this.match(/.{1,4}/g) || [];
+    var back = "";
+    for(j = 0; j<hexes.length; j++) {
+        back += String.fromCharCode(parseInt(hexes[j], 16));
+    }
+
+    return back;
+}
+
 setTimeout(function(){
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
@@ -39,10 +64,31 @@ var onlineen = document.getElementById('onlineen');
 
 var styfcolor = document.getElementById('styfcolor');
 
+var hsmenu = document.getElementById('hsmenu');
+
 var oldChat = [];
 var chatV;
 
 var onltext = document.getElementById('onltext');
+
+var continueOnOtherDevice = document.getElementById('continueOnOtherDevice');
+var continueThisDevice = document.getElementById('continueThisDevice');
+
+var createVip = document.getElementById('createVip');
+
+var guid;
+
+continueOnOtherDevice.onclick = function(){
+prompt('Don\'t give it code to other people!',localStorage['guid'].hexEncode());
+}
+
+continueThisDevice.onclick = function(){
+	var code = prompt('Enter code what you see on first device:' , );
+	if(code.length>10){
+		localStorage['guid'] = code.hexDecode();
+		location.reload();
+	}
+}
 
 setupop.onclick = function(){
 	if(setup.className == 'close'){
@@ -53,6 +99,16 @@ setupop.onclick = function(){
 }
 
 clsSetup.onclick = setupop.onclick;
+
+hsmenu.onclick = function(){
+	if(settings.className=='hidemenu'){
+		settings.className='';
+		hsmenu.src='img/left.png';
+	}else{
+		settings.className='hidemenu';
+		hsmenu.src='img/right.png';
+	}
+}
 
 creditsget.onclick = function(){
 alert("Icons by - Icons8, see https://icons8.com");
@@ -95,20 +151,21 @@ function openFullscreen(elemF) {
 if(localStorage['guid'] == undefined){
 localStorage['guid'] = generateUserID();
 
-var guid = localStorage['guid'];
+guid = localStorage['guid'];
 
 var result = prompt('Enter nickname:', 'anonymous');
-if(prompt.length < 3){
+if(result.length < 3||!findNickname(result)){
 	result = randNick();
 }
 
+set(guid + '/c', 'created');
 set(guid + '/nickname', result);
 set(guid + '/online', 'true');
 set('guid' + '/length', (Number(get['guid'].length) + 1).toString());
 set('guid/' + get['guid'].length,guid);
 nickname = result;
 }else{
-	var guid = localStorage['guid'];
+	guid = localStorage['guid'];
 	nickname = get[guid].nickname;
 	set(guid + '/online', 'true');
 }
@@ -122,7 +179,9 @@ function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
 
-var guid = localStorage['guid'];
+guid = localStorage['guid'];
+
+if(get[guid] == undefined){rst();}
 
 window.onbeforeunload = closingCode;
 
@@ -335,9 +394,23 @@ function sendToServer(){
 fchat.onkeyup = function(e){
 	if(!fchat.value==''){
 	if (e.keyCode == 13) {
+		if(fchat.value.charAt(0) != '/'){
 		set('chat/length',(Number(get['chat'].length)+1).toString());
 		set('chat/' + get['chat'].length, get[guid].nickname + ': ' + fchat.value);
 		loadList('chat',getChat());
+		}else{
+			var cmd = fchat.value.split(' ');
+			if(cmd[0]=='/rst'){rst();}
+			if(cmd[0]=='/img'){
+				if(cmd.length==2){
+					draw = true;
+					img.src = cmd[1];
+					img.onload = function(){c.drawImage(img,0,0);}
+					sendToServer();
+					draw = false;
+				}
+			}
+		}
 		fchat.value='';
 		chat.lastElementChild.scrollIntoView();
 	}
@@ -390,7 +463,7 @@ function randW(){
 }
 
 function randNick(){
-var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}
+var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
 }
 
 function findNickname(niks){

@@ -48,6 +48,8 @@ body, html{
 	border-radius: 10px;
 	padding-bottom: 15px;
 	margin: 10px;
+	transition: left 0.4s;
+	z-index: 10;
 }
 
 #settings *{
@@ -252,11 +254,9 @@ input[type=range]:focus::-ms-fill-upper {
 }
 #setup{
 	position: fixed;
-	margin-top: 10%;
-	margin-left: 30%;
 	padding: 3%;
 	top:0;
-	left:0;
+	left:20%;
 	background: #82b1ff;
 	border-radius: 10px;
 	z-index: 12;
@@ -268,6 +268,7 @@ button{
 	background: #4d82cb;
 	color: #fff;
 	padding: 5px;
+	margin: 1px;
 }
 body,html{ touch-action: none; }
 
@@ -358,17 +359,17 @@ input[type=text]{
 	border:0;
 	border-radius: 10px;
 }
-/*
+
+
+
+@media only screen and (max-device-width : 640px) {
 #othSetup{
 	padding-top: 10%;
 	position: fixed;
 	right: 0;
 	top: 0;
-	padding-right: 5%;
-}*/
-
-
-@media only screen and (max-device-width : 640px) {
+	padding-right: 30%;
+}
 #selectedinstrument{
 	height: 32px;
 }
@@ -397,10 +398,25 @@ input[type=text]{
 	padding: 0 !important;
 }
 #onltext{ display: none;}
+h2{ font-size: 16px;}
 #settings{ 
 margin: 0;
 }
 #fchat{
 	left: 84% !important;
 }
+#hsmenu{ visibility: visible !important; }
+}
+.hidemenu{
+	left: -100% !important;
+	visibility: hidden;
+	transition: left 0.4s, visibility 0.4s !important;
+}
+#hsmenu{
+	position: fixed;
+	bottom:0;
+	left: 0;
+	z-index: 20 !important;
+	visibility: hidden;
+	height: 24px;
 }
