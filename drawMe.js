@@ -438,7 +438,7 @@ function createCursor(x,y,nik){
 	var k = document.createElement('div');
 	k.innerHTML='<img src="img/cursor.png"><p>' + nik + '</p>';
 	k.className = 'cursor';
-	k.style.left = x-24 + 'px';
+	k.style.left = x + 'px';
 	k.style.top = y + 'px';
 	document.body.appendChild(k);
 }
