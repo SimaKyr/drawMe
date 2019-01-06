@@ -187,7 +187,7 @@ window.onbeforeunload = closingCode;
 
 styfcolor.style.backgroundColor = get[guid].color;
 
-size.style.value = get[guid].size;
+size.value = get[guid].size;
 
 function closingCode(){
    set(guid + '/online', 'false');
