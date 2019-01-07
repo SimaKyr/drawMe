@@ -22,7 +22,6 @@ String.prototype.hexDecode = function(){
 
     return back;
 }
-
 setTimeout(function(){
 	
 function getUniversalTime(){
