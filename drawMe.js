@@ -299,7 +299,6 @@ function matchOnline(){
 	return out;
 }
 
-
 color.onchange = function(){
 	set(guid + '/color',color.value);
 	styfcolor.style.backgroundColor = color.value;
