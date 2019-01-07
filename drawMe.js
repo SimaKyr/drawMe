@@ -27,7 +27,7 @@ setTimeout(function(){
 	
 function getUniversalTime(){
 	var dt = new Date;
-	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes()+':'+dt.getUTCSeconds();
+	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes();
 }
 	
 function download(text, name, type) {
