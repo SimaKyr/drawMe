@@ -24,6 +24,12 @@ String.prototype.hexDecode = function(){
 }
 
 setTimeout(function(){
+	
+function getUniversalTime(){
+	var dt = new Date;
+	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes()+':'+dt.getUTCSeconds();
+}
+	
 function download(text, name, type) {
   var a = document.getElementById("a");
   var file = new Blob([text], {type: type});
@@ -87,6 +93,14 @@ var continueThisDevice = document.getElementById('continueThisDevice');
 var createVip = document.getElementById('createVip');
 
 var guid;
+
+var argUrl = window.location.search.replace('?','').split('&');
+
+function detectVip(){
+	if(argUrl.length!=0){
+		
+	}
+}
 
 saveop.onclick = function(){
 	canvas.toBlob(function(blob){
@@ -205,17 +219,10 @@ guid = localStorage['guid'];
 
 if(get[guid] == undefined){rst();}
 
-window.onbeforeunload = closingCode;
-
 styfcolor.style.backgroundColor = get[guid].color;
 color.value = get[guid].color;
 
 size.value = get[guid].size;
-
-function closingCode(){
-   set(guid + '/online', 'false');
-   return null;
-}
 
 if(get[localStorage['guid']].chaten == undefined){
 	set(localStorage['guid'] + '/chaten',true);
@@ -282,10 +289,11 @@ function matchOnline(){
 	var hel;
 	var lenghtmax = Number(get['guid'].length)
 	while(i!=lenghtmax+1){
-		if(get[get['guid'][i]].online == 'true'){
+		if(get[get['guid'][i]].uOnline != undefined){
+		if(get[get['guid'][i]].uOnline == getUniversalTime()){
 		out[c]=get[get['guid'][i]].nickname;
 		c++;
-		}
+		}}
 		i++;
 	}
 	return out;
@@ -525,6 +533,8 @@ sNick.onclick = function(){
 
 
 var timOnl = setInterval(function(){
+set(guid + '/uOnline',getUniversalTime());
+
 loadList('onlinetab',matchOnline());
 chatV = getChat();
 if(chatV.length!=oldChat.length){
