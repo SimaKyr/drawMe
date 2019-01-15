@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="base.css" type="text/css">
 	
     <meta property="og:title" content="Draw Me!">
+	<meta property="og:site_name" content="Created by SimaKyr">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://simakyr.github.io/drawMe/">
     <meta property="og:image" content="https://simakyr.github.io/drawMe/favicon.png">
@@ -20,7 +21,6 @@
     <meta property="og:image:width" content="256">
     <meta property="og:image:height" content="256">
     <meta property="og:description" content="Draw online with you friends!">
-	<meta property="og:site_name" content="Created by SimaKyr">
 	
 	<link rel="stylesheet" href="styles.css">
 	
@@ -35,18 +35,18 @@
 	<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
 
 	<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyDnS0sAQ23PL2_Slys6mgRlzJHUGb-7WTU",
-    authDomain: "drawme-9.firebaseapp.com",
-    databaseURL: "https://drawme-9.firebaseio.com",
-    projectId: "drawme-9",
-    storageBucket: "drawme-9.appspot.com",
-    messagingSenderId: "944726631004"
-  };
-  firebase.initializeApp(config);
-  function set(key,value){firebase.database().ref().child(key).set(value);}
-  firebase.database().ref().on('value', snap => get = snap.val());
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyDnS0sAQ23PL2_Slys6mgRlzJHUGb-7WTU",
+		authDomain: "drawme-9.firebaseapp.com",
+		databaseURL: "https://drawme-9.firebaseio.com",
+		projectId: "drawme-9",
+		storageBucket: "drawme-9.appspot.com",
+		messagingSenderId: "944726631004"
+	  };
+	  firebase.initializeApp(config);
+	  function set(key,value){firebase.database().ref().child(key).set(value);}
+	  firebase.database().ref().on('value', snap => get = snap.val());
 	</script>
 	</head>
 	<body ondragstart="return false;">
