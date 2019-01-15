@@ -422,6 +422,13 @@ margin: 0;
 	visibility: hidden;
 	transition: left 0.4s, visibility 0.4s !important;
 }
+.hidebtn{
+	opacity: 0;
+	visibility: hidden !important;
+	filter: alpha(opacity=0);
+	transition: opacity 0.4s, filter 0.4s, visibility 0.4s !important;
+}
+
 #hsmenu{
 	position: fixed;
 	bottom:0;

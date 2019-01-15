@@ -1,9 +1,10 @@
 function rst(){ localStorage.clear();location.reload(); }
 
 window.onerror = function(error) {
- a = prompt('We found some problems with GameME \n What we think to do?\n1 - Delete profile\n2 - Reload webpage','2')
+ a = prompt('We found some problems with GameME \n What we think to do?\n1 - Delete profile\n2 - Reload webpage\n3 - Contine','2')
  if(a==1){ rst(); }
  if(a==2){ location.reload(); }
+ if(a==3){ window.onerror = function(){}; }
 };
 
 String.prototype.hexEncode = function(){
@@ -553,6 +554,15 @@ sNick.onclick = function(){
 	}
 	else{
 		alert('It nickname use other people')
+	}
+}
+function browserFullscreen(){return window.innerHeight == screen.height};
+
+window.onresize = function(){
+	if(browserFullscreen()){
+		fullscreenop.className = 'hidebtn';
+	}else{
+		fullscreenop.className = '';
 	}
 }
 
