@@ -1,5 +1,11 @@
 function rst(){ localStorage.clear();location.reload(); }
 
+window.onerror = function(error) {
+ a = prompt('We found some problems with GameME \n What we think to do?\n1 - Delete profile\n2 - Reload webpage','2')
+ if(a==1){ rst(); }
+ if(a==2){ location.reload(); }
+};
+
 String.prototype.hexEncode = function(){
     var hex, i;
 
