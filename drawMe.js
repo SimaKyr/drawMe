@@ -24,6 +24,7 @@ String.prototype.hexDecode = function(){
 }
 setTimeout(function(){
 	
+	if(typeof get == undefined){location.reload();}
 function getUniversalTime(){
 	var dt = new Date;
 	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes();
@@ -358,11 +359,21 @@ yMouse -= canvas.offsetTop;
 
 if(instrument == 'pen'){
 c.fillStyle = color.value;
-c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+
+c.beginPath();
+c.strokeStyle = 'rgba(0,0,0,0)';
+c.arc(xMouse - size.value/2, yMouse - size.value/2, size.value, 0, 2 * Math.PI);
+c.fill();
+c.stroke();
 }
 if(instrument == 'erase'){
-	c.fillStyle = '#ffffff';
-c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+	c.fillStyle = '#fff';
+
+c.beginPath();
+c.strokeStyle = 'rgba(0,0,0,0)';
+c.arc(xMouse - size.value/2, yMouse - size.value/2, size.value, 0, 2 * Math.PI);
+c.fill();
+c.stroke();
 }
 
 if(live.checked){
@@ -400,12 +411,22 @@ yMouse -= canvas.offsetTop;
 
 if(instrument == 'pen'){
 c.fillStyle = color.value;
-c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+
+c.beginPath();
+c.strokeStyle = 'rgba(0,0,0,0)';
+c.arc(xMouse - size.value/2, yMouse - size.value/2, size.value, 0, 2 * Math.PI);
+c.fill();
+c.stroke();
 }
 
 if(instrument == 'erase'){
 c.fillStyle = '#ffffff';
-c.fillRect(xMouse - size.value/2, yMouse - size.value/2, size.value, size.value);
+
+c.beginPath();
+c.strokeStyle = 'rgba(0,0,0,0)';
+c.arc(xMouse - size.value/2, yMouse - size.value/2, size.value, 0, 2 * Math.PI);
+c.fill();
+c.stroke();
 }
 
 	if(instrument == 'picker'){
@@ -529,7 +550,17 @@ sNick.onclick = function(){
 	}
 }
 
+var timO;
 
+d=new Date;
+
+var TimeOld = d.getUTCSeconds()+1;
+timO = setInterval(function(){
+	d=new Date;
+	if(TimeOld!=d.getUTCSeconds()){
+		
+		clearInterval(timO);
+		
 var timOnl = setInterval(function(){
 set(guid + '/uOnline',getUniversalTime());
 
@@ -540,7 +571,10 @@ loadList('chat',getChat());
 oldChat = chatV;
 chat.lastElementChild.scrollIntoView();
 }
-},500);
+
+if(get['kick']==true){location.reload();}
+}
+,500);}},1);
 
 var tim = setInterval(function(){
 if(!draw){loadFromServer();}
