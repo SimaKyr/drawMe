@@ -1,4 +1,7 @@
-function rst(){ localStorage.clear();location.reload(); }
+function rst(){ localStorage.clear();localStorage['NeV']='true';location.reload(); }
+
+if(localStorage['NeV'] == undefined){rst();}
+
 
 roomName = 'main';
 
@@ -67,6 +70,7 @@ var picker = document.getElementById('picker');
 var fill = document.getElementById('fill');
 var rectangle = document.getElementById('rectangle');
 var percent = document.getElementById('percent');
+var line = document.getElementById('line');
 
 var sinstrument = document.getElementById('selectedinstrument');
 
@@ -103,15 +107,33 @@ var guid;
 
 var argUrl = window.location.search.replace('?','').split('&');
 
+detectVip()
+
 function detectVip(){
 	if(argUrl.length!=0){
 		roomName = argUrl[0].replace('vip=','');
 		if(roomName.length!=argUrl[0]){
-			if(get['roomName'] == undefined){
+			if(get[roomName] == undefined){
 				roomName='main';
 				}
 		}else{roomName='main';}
 	}
+}
+
+function createVipF(vipname){
+	set(vipname + '/chat/length',0);
+	set(vipname + '/chat/0','Welcome to youown server!');
+	
+	set(vipname + '/users/' + nickname + '/own', true);
+	set(vipname + '/canvas','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAANSURBVBhXY/j///9/AAn7A/0FQ0XKAAAAAElFTkSuQmCC');
+}
+
+createVip.onclick = function(){ 
+var linVip = randW();
+
+createVipF(linVip);
+
+alert('To play VIP with friends you must go to the link: ' + 'https://simakyr.github.io/drawMe/?vip=' + linkVip)
 }
 
 saveop.onclick = function(){
@@ -178,6 +200,7 @@ picker.onclick = function(){ setInstument('picker'); }
 fill.onclick = function(){ setInstument('fill'); }
 rectangle.onclick = function(){ setInstument('rectangle'); }
 percent.onclick = function(){ setInstument('percent'); }
+line.onclick = function(){ setInstument('line'); }
 
 function generateUserID(){
 	date = new Date;
@@ -615,5 +638,6 @@ if(!draw){loadFromServer();}
 });
 
 setInterval( function(){set('users/'+ guid + '/uOnline',getUniversalTime());} ,1000);
+
 
 },2500);
