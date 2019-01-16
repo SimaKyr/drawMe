@@ -47,7 +47,7 @@ function download(text, name, type) {
   a.download = name;
   a.click();
 }
-setInterval(function(){
+setTimeout(function(){
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
 var img = document.getElementById('loadimg');
@@ -481,7 +481,7 @@ fchat.onkeyup = function(e){
 	if (e.keyCode == 13) {
 		if(fchat.value.charAt(0) != '/'){
 		set(roomName + '/chat/length',(Number(get[roomName]['chat'].length)+1).toString());
-		set(roomName + '/chat/' + get[roomName]['chat'].length, get[guid].nickname + ': ' + fchat.value);
+		set(roomName + '/chat/' + get[roomName]['chat'].length, get['users'][guid].nickname + ': ' + fchat.value);
 		loadList('chat',getChat());
 		}else{
 			var cmd = fchat.value.split(' ');
@@ -625,16 +625,14 @@ chat.lastElementChild.scrollIntoView();
 
 });
 
-firebase.database().ref(roomName + 'kick/').on('child_changed', function(snap){ 
-if(get['kick']==true){location.reload();}
-});
 
-firebase.database().ref().on('child_changed', function(snap){ 
+firebase.database().ref('users').on('child_changed', function(snap){ 
 loadList('onlinetab',matchOnline());
 });
 
-firebase.database().ref(roomName + '/canvas').on('child_changed', function(snap){ 
-if(!draw){loadFromServer();}
+firebase.database().ref(roomName).on('child_changed',function(){
+     if(!draw){loadFromServer();}
+	 if(get['kick']==true){location.reload();}
 });
 
 setInterval( function(){set('users/'+ guid + '/uOnline',getUniversalTime());} ,1000);
