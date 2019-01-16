@@ -1,5 +1,7 @@
 function rst(){ localStorage.clear();location.reload(); }
 
+roomName = 'main';
+
 window.onerror = function(error) {
  a = prompt('We found some problems with GameME \n What we think to do?\n1 - Delete profile\n2 - Reload webpage\n3 - Contine','2')
  if(a==1){ rst(); }
@@ -7,6 +9,7 @@ window.onerror = function(error) {
  if(a==3){ window.onerror = function(){}; }
 };
 
+if(localStorage)
 String.prototype.hexEncode = function(){
     var hex, i;
 
@@ -29,9 +32,6 @@ String.prototype.hexDecode = function(){
 
     return back;
 }
-setTimeout(function(){
-	
-	if(typeof get == undefined){location.reload();}
 function getUniversalTime(){
 	var dt = new Date;
 	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes();
@@ -44,7 +44,7 @@ function download(text, name, type) {
   a.download = name;
   a.click();
 }
-
+setInterval(function(){
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
 var img = document.getElementById('loadimg');
@@ -105,14 +105,19 @@ var argUrl = window.location.search.replace('?','').split('&');
 
 function detectVip(){
 	if(argUrl.length!=0){
-		
+		roomName = argUrl[0].replace('vip=','');
+		if(roomName.length!=argUrl[0]){
+			if(get['roomName'] == undefined){
+				roomName='main';
+				}
+		}else{roomName='main';}
 	}
 }
 
 saveop.onclick = function(){
 	canvas.toBlob(function(blob){
 	a.href = URL.createObjectURL(blob);
-	a.download = 'YouArtwork';
+	a.download = 'YouArtwork-' + randW();
 	a.click();
 	},'image/png',1);
 }
@@ -192,25 +197,25 @@ function openFullscreen(elemF) {
 }
 
 if(localStorage['guid'] == undefined){
-localStorage['guid'] = generateUserID();
-
-guid = localStorage['guid'];
 
 var result = prompt('Enter nickname:', 'anonymous');
 if(result.length < 3||!findNickname(result)){
 	result = randNick();
 }
 
-set(guid + '/c', 'created');
-set(guid + '/nickname', result);
-set(guid + '/online', 'true');
-set('guid' + '/length', (Number(get['guid'].length) + 1).toString());
-set('guid/' + get['guid'].length,guid);
+guid = generateUserID();
+
+localStorage['guid'] = guid;
+
+set('users/' +guid + '/c', 'created');
+set('users/' +guid + '/nickname', result);
+set('users/' + guid + '/online', 'true');
+set('users/' +'guid' + '/length', (Number(get['users']['guid'].length) + 1).toString());
+set('users/guid/' + get['users']['guid'].length,guid);
 nickname = result;
 }else{
 	guid = localStorage['guid'];
-	nickname = get[guid].nickname;
-	set(guid + '/online', 'true');
+	nickname = get['users'][guid].nickname;
 }
 
 function componentToHex(c) {
@@ -224,30 +229,30 @@ function rgbToHex(r, g, b) {
 
 guid = localStorage['guid'];
 
-if(get[guid] == undefined){rst();}
+if(get['users'][guid] == undefined){rst();}
 
-styfcolor.style.backgroundColor = get[guid].color;
-color.value = get[guid].color;
+styfcolor.style.backgroundColor = get['users'][guid].color;
+color.value = get['users'][guid].color;
 
-size.value = get[guid].size;
+size.value = get['users'][guid].size;
 
-if(get[localStorage['guid']].chaten == undefined){
-	set(localStorage['guid'] + '/chaten',true);
-	set(localStorage['guid'] + '/onlineen',true);
-	set(localStorage['guid'] + '/cusor', true);
+if(get['users'][localStorage['guid']].chaten == undefined){
+	set('users/' + localStorage['guid'] + '/chaten',true);
+	set('users/' + localStorage['guid'] + '/onlineen',true);
+	set('users/' + localStorage['guid'] + '/cusor', true);
 }
 
-curs.checked = get[localStorage['guid']].cusor;
-onlineen.checked = get[localStorage['guid']].onlineen;
-chaten.checked = get[localStorage['guid']].chaten;
+curs.checked = get['users'][localStorage['guid']].cusor;
+onlineen.checked = get['users'][localStorage['guid']].onlineen;
+chaten.checked = get['users'][localStorage['guid']].chaten;
 
-curs.onchange = function(){ deleteCursors(); set(localStorage['guid'] + '/cusor',curs.checked);}
+curs.onchange = function(){ deleteCursors(); set('users' + localStorage['guid'] + '/cusor',curs.checked);}
 chaten.onchange = function(){
-	set(localStorage['guid'] + '/chaten',chaten.checked);
+	set('users/' + localStorage['guid'] + '/chaten',chaten.checked);
 	hideChatOrOnline();
 }
 onlineen.onchange = function(){
-	set(localStorage['guid'] + '/onlineen',onlineen.checked);
+	set('users/' + localStorage['guid'] + '/onlineen',onlineen.checked);
 	hideChatOrOnline();
 	
 }
@@ -290,15 +295,15 @@ function loadList(id,list){
 	}
 }
 function matchOnline(){
-	var i=0;
+	var i=1;
 	var c=0;
 	var out = [];
 	var hel;
-	var lenghtmax = Number(get['guid'].length)
+	var lenghtmax = Number(get['users']['guid'].length)
 	while(i!=lenghtmax+1){
-		if(get[get['guid'][i]].uOnline != undefined){
-		if(get[get['guid'][i]].uOnline == getUniversalTime()){
-		out[c]=get[get['guid'][i]].nickname;
+		if(get['users'][get['users']['guid'][i]].uOnline != undefined){
+		if(get['users'][get['users']['guid'][i]].uOnline == getUniversalTime()){
+		out[c]=get['users'][get['users']['guid'][i]].nickname;
 		c++;
 		}}
 		i++;
@@ -307,12 +312,12 @@ function matchOnline(){
 }
 
 color.onchange = function(){
-	set(guid + '/color',color.value);
+	set('users/' + guid + '/color',color.value);
 	styfcolor.style.backgroundColor = color.value;
 }
 
 size.onchange = function(){
-	set(guid + '/size', size.value);
+	set('users/' + guid + '/size', size.value);
 }
 
 var draw = false;
@@ -328,7 +333,7 @@ function decimalToHexString(number)
 }
 
 function loadFromServer(){ 
-var imgdata = get['canvas'];
+var imgdata = get[roomName]['canvas'];
 img.src = imgdata;
 img.onload = function(){c.drawImage(img,0,0);}
 }
@@ -337,11 +342,11 @@ loadFromServer();
 
 document.onpointermove = function(e){
 	if(curs.checked){
-set('users/'+nickname + '/x',e.pageX);
-set('users/'+nickname + '/y',e.pageY);
-set('users/'+nickname + '/mouse',true);
+set(roomName + '/users/'+nickname + '/x',e.pageX);
+set(roomName + '/users/'+nickname + '/y',e.pageY);
+set(roomName + '/users/'+nickname + '/mouse',true);
 	}else{
-	set('users/'+nickname + '/mouse',false);	
+	set(roomName + '/users/'+nickname + '/mouse',false);	
 	}
 }
 
@@ -445,15 +450,15 @@ c.fillStyle = color.value;
 }
 
 function sendToServer(){
-	set('canvas',canvas.toDataURL());
+	set(roomName + '/' +'canvas',canvas.toDataURL());
 }
 
 fchat.onkeyup = function(e){
 	if(!fchat.value==''){
 	if (e.keyCode == 13) {
 		if(fchat.value.charAt(0) != '/'){
-		set('chat/length',(Number(get['chat'].length)+1).toString());
-		set('chat/' + get['chat'].length, get[guid].nickname + ': ' + fchat.value);
+		set(roomName + '/chat/length',(Number(get[roomName]['chat'].length)+1).toString());
+		set(roomName + '/chat/' + get[roomName]['chat'].length, get[guid].nickname + ': ' + fchat.value);
 		loadList('chat',getChat());
 		}else{
 			var cmd = fchat.value.split(' ');
@@ -475,7 +480,7 @@ fchat.onkeyup = function(e){
 }
 
 function getChat(){
-	var ch = get['chat'];
+	var ch = get[roomName]['chat'];
 	var i=0;
 	var out=[];
 	while(i-1!=ch.length){
@@ -506,17 +511,17 @@ function showCursors(){
 	var i=0;
 	deleteCursors();
 	while(i!=ceo.length){
-		if(get['users'][ceo[i]] !=undefined){
+		if(get[roomName]['users'][ceo[i]] !=undefined){
 		if(ceo[i]!=nickname){
 		if(get['users'][ceo[i]].mouse){
-		createCursor(get['users'][ceo[i]].x,get['users'][ceo[i]].y,ceo[i]);
+		createCursor(get[roomName]['users'][ceo[i]].x,get[roomName]['users'][ceo[i]].y,ceo[i]);
 		}}}
 	i++;
 	}
 }
 
 function randW(){
-	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 5);	
+	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);	
 }
 
 function randNick(){
@@ -525,12 +530,12 @@ var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
 
 function findNickname(niks){
 	var i=0;
-	while(get['guid'].length!=i){
-		if(get[get['guid'][i]].nickname == undefined){
-		set(get['guid'][i] + '/nickname',randNick());	
+	while(get['users']['guid'].length!=i){
+		if(get['users'][get['guid'][i]].nickname == undefined){
+		set(get['users']['guid'][i] + '/nickname',randNick());	
 		}
 		
-		if(get[get['guid'][i]].nickname == niks){
+		if(get['users'][get['guid'][i]].nickname == niks){
 			return false;
 		}
 		i++;
@@ -548,7 +553,7 @@ while(paras[0]) {
 nickset.value = nickname;
 
 sNick.onclick = function(){
-	if(findNickname()){
+	if(findNickname(nickset.value)){
 		nickname = nickset.value;
 		set(localStorage['guid'] + '/nickname',nickname);
 	}
@@ -566,35 +571,49 @@ window.onresize = function(){
 	}
 }
 
-var timO;
-
-d=new Date;
-
-var TimeOld = d.getUTCSeconds()+1;
-timO = setInterval(function(){
-	d=new Date;
-	if(TimeOld!=d.getUTCSeconds()){
-		
-		clearInterval(timO);
-		
-var timOnl = setInterval(function(){
-set(guid + '/uOnline',getUniversalTime());
+function updAll(){
 
 loadList('onlinetab',matchOnline());
+
 chatV = getChat();
+
 if(chatV.length!=oldChat.length){
 loadList('chat',getChat());
 oldChat = chatV;
 chat.lastElementChild.scrollIntoView();
 }
 
-if(get['kick']==true){location.reload();}
-}
-,500);}},1);
+if(get[roomName].kick==true){location.reload();}
 
-var tim = setInterval(function(){
 if(!draw){loadFromServer();}
-if(curs.checked){showCursors();}
-},20);
 }
-,2500);
+
+updAll();
+
+firebase.database().ref(roomName + 'users/').on('child_changed', function(snap){ 
+if(curs.checked){showCursors();}
+});
+
+firebase.database().ref(roomName + 'chat/').on('child_changed', function(snap){ 
+
+loadList('chat',getChat());
+oldChat = chatV;
+chat.lastElementChild.scrollIntoView();
+
+});
+
+firebase.database().ref(roomName + 'kick/').on('child_changed', function(snap){ 
+if(get['kick']==true){location.reload();}
+});
+
+firebase.database().ref().on('child_changed', function(snap){ 
+loadList('onlinetab',matchOnline());
+});
+
+firebase.database().ref(roomName + '/canvas').on('child_changed', function(snap){ 
+if(!draw){loadFromServer();}
+});
+
+setInterval( function(){set('users/'+ guid + '/uOnline',getUniversalTime());} ,1000);
+
+},2500);
