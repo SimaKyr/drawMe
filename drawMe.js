@@ -561,7 +561,7 @@ function findNickname(niks){
 		if(get['users'][get['users']['guid'][i]].nickname == undefined){
 		set(get['users']['guid'][i] + '/nickname',randNick());	
 		}
-		if(get['users'][get['guid'][i]].nickname == niks){
+		if(get['users'][get['users']['guid'][i]].nickname == niks){
 			return false;
 		}
 		i++;
