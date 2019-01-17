@@ -35,9 +35,13 @@ String.prototype.hexDecode = function(){
 
     return back;
 }
-function getUniversalTime(){
+function getUniversalTime(addmin){
 	var dt = new Date;
-	return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes();
+	if(addmin!=undefined){
+		return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+(dt.getUTCMinutes()+addmin);
+	}else{
+		return dt.getUTCDate()+'|'+dt.getUTCHours()+':'+dt.getUTCMinutes();
+	}
 }
 	
 function download(text, name, type) {
@@ -231,12 +235,12 @@ guid = generateUserID();
 
 localStorage['guid'] = guid;
 
-set('users/' +guid + '/c', 'created');
 set('users/' +guid + '/nickname', result);
-set('users/' + guid + '/online', 'true');
 
 set('users/' +'guid' + '/length', (Number(get['users']['guid'].length) + 1).toString());
 set('users/guid/' + get['users']['guid'].length,guid);
+
+set('users/' + guid + '/color','#ffffff');
 
 nickname = result;
 
@@ -329,7 +333,11 @@ function matchOnline(){
 	var lenghtmax = Number(get['users']['guid'].length)
 	while(i!=lenghtmax+1){
 		if(get['users'][get['users']['guid'][i]].uOnline != undefined){
-		if(get['users'][get['users']['guid'][i]].uOnline == getUniversalTime()){
+			
+		if(get['users'][get['users']['guid'][i]].uOnline == getUniversalTime(1)||
+		get['users'][get['users']['guid'][i]].uOnline == getUniversalTime(-1)||
+		get['users'][get['users']['guid'][i]].uOnline == getUniversalTime(0)){
+			
 		out[c]=get['users'][get['users']['guid'][i]].nickname;
 		c++;
 		}}
@@ -527,7 +535,7 @@ function createCursor(x,y,nik){
 	var k = document.createElement('div');
 	k.innerHTML='<img src="img/cursor.png"><p>' + nik + '</p>';
 	k.className = 'cursor';
-	k.style.left = x-14 + 'px';
+	k.style.left = x-24 + 'px';
 	k.style.top = y + 'px';
 	document.body.appendChild(k);
 }
@@ -540,7 +548,7 @@ function showCursors(){
 	while(i!=ceo.length){
 		if(get[roomName]['users'][ceo[i]] !=undefined){
 		if(ceo[i]!=nickname){
-		if(get['users'][ceo[i]].mouse){
+		if(get[roomName]['users'][ceo[i]].mouse){
 		createCursor(get[roomName]['users'][ceo[i]].x,get[roomName]['users'][ceo[i]].y,ceo[i]);
 		}}}
 	i++;
@@ -557,7 +565,7 @@ var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
 
 function findNickname(niks){
 	var i=1;
-	while(get['users']['guid'].length!=i){
+	while(get['users']['guid'].length+1!=i){
 		if(get['users'][get['users']['guid'][i]].nickname == undefined){
 		set(get['users']['guid'][i] + '/nickname',randNick());	
 		}
@@ -616,11 +624,11 @@ if(!draw){loadFromServer();}
 
 updAll();
 
-firebase.database().ref(roomName + 'users/').on('child_changed', function(snap){ 
+firebase.database().ref(roomName + '/users').on('child_changed', function(snap){ 
 if(curs.checked){showCursors();}
 });
 
-firebase.database().ref(roomName + 'chat/').on('child_changed', function(snap){ 
+firebase.database().ref(roomName + '/chat').on('child_changed', function(snap){ 
 
 loadList('chat',getChat());
 oldChat = chatV;
