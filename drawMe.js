@@ -47,6 +47,7 @@ function download(text, name, type) {
   a.download = name;
   a.click();
 }
+
 setTimeout(function(){
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
