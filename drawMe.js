@@ -565,7 +565,7 @@ var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
 
 function findNickname(niks){
 	var i=1;
-	while(get['users']['guid'].length+1!=i){
+	while(Number(get['users']['guid'].length)+1!=i){
 		if(get['users'][get['users']['guid'][i]].nickname == undefined){
 		set(get['users']['guid'][i] + '/nickname',randNick());	
 		}
