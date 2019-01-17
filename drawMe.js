@@ -138,7 +138,7 @@ var linVip = randW();
 
 createVipF(linVip);
 
-alert('To play VIP with friends you must go to the link: ' + 'https://simakyr.github.io/drawMe/?vip=' + linkVip)
+alert('To play VIP with friends you must go to the link: ' + 'https://simakyr.github.io/drawMe/?vip=' + linVip)
 }
 
 saveop.onclick = function(){
