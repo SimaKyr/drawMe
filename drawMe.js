@@ -234,9 +234,12 @@ localStorage['guid'] = guid;
 set('users/' +guid + '/c', 'created');
 set('users/' +guid + '/nickname', result);
 set('users/' + guid + '/online', 'true');
+
 set('users/' +'guid' + '/length', (Number(get['users']['guid'].length) + 1).toString());
 set('users/guid/' + get['users']['guid'].length,guid);
+
 nickname = result;
+
 }else{
 	guid = localStorage['guid'];
 	nickname = get['users'][guid].nickname;
@@ -555,7 +558,7 @@ var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
 function findNickname(niks){
 	var i=1;
 	while(get['users']['guid'].length!=i){
-		if(get['users'][get['guid'][i]].nickname == undefined){
+		if(get['users'][get['users']['guid'][i]].nickname == undefined){
 		set(get['users']['guid'][i] + '/nickname',randNick());	
 		}
 		
