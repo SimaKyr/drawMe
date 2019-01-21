@@ -2,6 +2,13 @@ function rst(){ localStorage.clear();localStorage['NeV']='true';location.reload(
 
 if(localStorage['NeV'] == undefined){rst();}
 
+function getPosition(e, elementd) {
+	var tmp3 = elementd.getBoundingClientRect();
+  return { 
+    x: e.clientX - tmp3.left,
+    y: e.clientY - tmp3.top,
+  }; 
+}
 
 roomName = 'main';
 
@@ -140,6 +147,9 @@ createVipF(linVip);
 
 alert('To play VIP with friends you must go to the link: ' + 'https://simakyr.github.io/drawMe/?vip=' + linVip)
 }
+
+var savedYMouse;
+var savedXMouse;
 
 saveop.onclick = function(){
 	canvas.toBlob(function(blob){
@@ -390,19 +400,8 @@ canvas.onpointermove = function(e){
 		
 var xMouse;
 var yMouse;
-var t;
-t = e;
-
-if (t.pageX || t.pageY) { 
-  xMouse = t.pageX;
-  yMouse = t.pageY;
-}
-else { 
-  xMouse = t.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-  yMouse = t.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-} 
-xMouse -= canvas.offsetLeft;
-yMouse -= canvas.offsetTop;
+xMouse = getPosition(e,e.target).x;
+yMouse = getPosition(e,e.target).y;
 
 if(instrument == 'pen'){
 c.fillStyle = color.value;
@@ -423,6 +422,50 @@ c.fill();
 c.stroke();
 }
 
+if(instrument == 'line'){
+	loadFromServer();
+	
+	c.lineCap = 'round';
+	
+	c.beginPath();
+	c.strokeStyle = color.value;
+	c.moveTo(savedX, savedY);
+	c.lineTo(xMouse, yMouse);
+	
+	savedXMouse = xMouse;
+	savedYMouse = yMouse;
+	
+	c.lineWidth = size.value;
+	c.stroke();
+}
+
+if(instrument == 'rectangle'){
+	loadFromServer();
+	
+	c.strokeStyle = color.value;
+	
+	savedXMouse = xMouse;
+	savedYMouse = yMouse;
+	
+	c.lineWidth = size.value;
+	c.beginPath();
+	c.rect(savedX,savedY,xMouse-savedX,yMouse-savedY);
+	c.stroke();
+}
+if(instrument == 'percent'){
+	loadFromServer();
+	
+	c.strokeStyle = color.value;
+	
+	savedXMouse = xMouse;
+	savedYMouse = yMouse;
+	
+	c.lineWidth = size.value;
+	c.beginPath();
+	c.arc(savedX,savedY,xMouse-savedX, 0, 2 * Math.PI);
+	c.stroke();
+}
+
 if(live.checked){
 sendToServer();
 loadFromServer();
@@ -431,8 +474,42 @@ loadFromServer();
 }
 canvas.onpointerup = function(){
 	draw=false;
+	
+	if(instrument == 'line'){
+	loadFromServer();
+	
+	c.lineCap = 'round';
+	
+	c.beginPath();
+	c.strokeStyle = color.value;
+	c.moveTo(savedX, savedY);
+	c.lineTo(savedXMouse, savedYMouse);
+	c.lineWidth = size.value;
+	c.stroke();
+}
+
+if(instrument == 'rectangle'){
+	loadFromServer();
+	
+	c.strokeStyle = color.value;
+	
+	c.lineWidth = size.value;
+	c.beginPath();
+	c.rect(savedX,savedY,savedXMouse-savedX,savedYMouse-savedY);
+	c.stroke();
+}
+if(instrument == 'percent'){
+	loadFromServer();
+	
+	c.strokeStyle = color.value;
+	
+	c.lineWidth = size.value;
+	c.beginPath();
+	c.arc(savedXMouse,savedYMouse,savedXMouse-savedX, 0, 2 * Math.PI);
+	c.stroke();
+}
+	sendToServer();
 	if(!live.checked){
-sendToServer();
 loadFromServer();
 }
 
@@ -442,19 +519,9 @@ canvas.onpointerdown = function(e){
 	
 var xMouse;
 var yMouse;
-var t;
-t = e;
 
-if (t.pageX || t.pageY) { 
-  xMouse = t.pageX;
-  yMouse = t.pageY;
-}
-else { 
-  xMouse = t.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-  yMouse = t.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-} 
-xMouse -= canvas.offsetLeft;
-yMouse -= canvas.offsetTop;
+xMouse = getPosition(e,e.target).x;
+yMouse = getPosition(e,e.target).y;
 
 if(instrument == 'pen'){
 c.fillStyle = color.value;
@@ -474,6 +541,13 @@ c.strokeStyle = 'rgba(0,0,0,0)';
 c.arc(xMouse - size.value/2, yMouse - size.value/2, size.value, 0, 2 * Math.PI);
 c.fill();
 c.stroke();
+}
+
+if(instrument == 'rectangle'||instrument == 'percent'||instrument == 'line'){
+sendToServer();
+	
+savedX = xMouse;
+savedY = yMouse;
 }
 
 	if(instrument == 'picker'){
@@ -518,7 +592,7 @@ function getChat(){
 	var ch = get[roomName]['chat'];
 	var i=0;
 	var out=[];
-	while(i-1!=ch.length){
+	while(i!=(Number(ch.length)+1)){
 		out[i]=ch[i];
 		i++;
 	}
