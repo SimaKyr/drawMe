@@ -30,8 +30,9 @@
 	<!-- iOS Safari (apple) -->
 	<meta name="apple-mobile-web-app-status-bar-style" content="#82b1ff">
 
-	<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase-database.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.9.2/firebase-database.js"></script>
 
 	<script>
 	  // Initialize Firebase
@@ -50,7 +51,6 @@
 	</head>
 	<body ondragstart="return false;">
 	<canvas id="canvas" height="576" width="1024"></canvas>
-	<script src="drawMe.js"></script>
 	<img id="loadimg">
 	<div id="settings">
 	<h2>Menu</h2>
@@ -116,15 +116,12 @@
 			  <span class="slider round"></span>
 			</label>
 	<div id="othSetup">		
-	<input id="nickset" value="" type="text">
-	<button id="sNick">Change nickname</button><br>
 	<button id="createVip">Create VIP server</button><br>
-	<button id="continueOnOtherDevice">Connect other device</button>
-	<button id="continueThisDevice">Connect this device</button><br>
 	<button id="creditsget">Credits</button>
 	<button id="clsSetup">Close</button>
 	</div>
 	</div>
 	<a id="a">D</a>
+	<script src="drawMe.js"></script>
 	</body>
 	<body>

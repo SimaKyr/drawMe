@@ -1,6 +1,3 @@
-function rst(){ localStorage.clear();localStorage['NeV']='true';location.reload(); }
-
-if(localStorage['NeV'] == undefined){rst();}
 
 function getPosition(e, elementd) {
 	var tmp3 = elementd.getBoundingClientRect();
@@ -13,13 +10,11 @@ function getPosition(e, elementd) {
 roomName = 'main';
 
 window.onerror = function(error) {
- a = prompt('We found some problems with GameME \n What we think to do?\n1 - Delete profile\n2 - Reload webpage\n3 - Contine','2')
- if(a==1){ rst(); }
- if(a==2){ location.reload(); }
- if(a==3){ window.onerror = function(){}; }
+ a = prompt('We found some problems with GameME \n What we think to do?\n1 - Reload game\n2 - Contine','2')
+ if(a==1){ location.reload(); }
+ if(a==2){ window.onerror = function(){}; }
 };
 
-if(localStorage)
 String.prototype.hexEncode = function(){
     var hex, i;
 
@@ -59,7 +54,6 @@ function download(text, name, type) {
   a.click();
 }
 
-setTimeout(function(){
 var canvas = document.getElementById('canvas');
 var c = canvas.getContext("2d");
 var img = document.getElementById('loadimg');
@@ -109,9 +103,6 @@ var oldChat = [];
 var chatV;
 
 var onltext = document.getElementById('onltext');
-
-var continueOnOtherDevice = document.getElementById('continueOnOtherDevice');
-var continueThisDevice = document.getElementById('continueThisDevice');
 
 var createVip = document.getElementById('createVip');
 
@@ -163,18 +154,6 @@ fullscreenop.onclick = function(){
 	openFullscreen(document.body);
 }
 
-continueOnOtherDevice.onclick = function(){
-prompt('Don\'t give it code to other people!',localStorage['guid'].hexEncode());
-}
-
-continueThisDevice.onclick = function(){
-	var code = prompt('Enter code what you see on first device:' , );
-	if(code.length>10){
-		localStorage['guid'] = code.hexDecode();
-		location.reload();
-	}
-}
-
 setupop.onclick = function(){
 	if(setup.className == 'close'){
 		setup.className = '';
@@ -217,11 +196,6 @@ rectangle.onclick = function(){ setInstument('rectangle'); }
 percent.onclick = function(){ setInstument('percent'); }
 line.onclick = function(){ setInstument('line'); }
 
-function generateUserID(){
-	date = new Date;
-	return date.toString();
-}
-
 function openFullscreen(elemF) {
   if (elemF.requestFullscreen) {
     elemF.requestFullscreen();
@@ -234,31 +208,6 @@ function openFullscreen(elemF) {
   }
 }
 
-if(localStorage['guid'] == undefined){
-
-var result = prompt('Enter nickname:', 'anonymous');
-if(result.length < 3||!findNickname(result)){
-	result = randNick();
-}
-
-guid = generateUserID();
-
-localStorage['guid'] = guid;
-
-set('users/' +guid + '/nickname', result);
-
-set('users/' +'guid' + '/length', (Number(get['users']['guid'].length) + 1).toString());
-set('users/guid/' + get['users']['guid'].length,guid);
-
-set('users/' + guid + '/color','#ffffff');
-
-nickname = result;
-
-}else{
-	guid = localStorage['guid'];
-	nickname = get['users'][guid].nickname;
-}
-
 function componentToHex(c) {
     var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
@@ -267,33 +216,37 @@ function componentToHex(c) {
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
+setTimeout(function(){
+firebase.auth().onAuthStateChanged(function(user) {
 
-guid = localStorage['guid'];
+if (firebase.auth().currentUser !== null){
 
-if(get['users'][guid] == undefined){rst();}
+var guid = firebase.auth().currentUser.uid;
+
+var nickname = 'users/' + guid + '/nickname';
 
 styfcolor.style.backgroundColor = get['users'][guid].color;
 color.value = get['users'][guid].color;
 
 size.value = get['users'][guid].size;
 
-if(get['users'][localStorage['guid']].chaten == undefined){
-	set('users/' + localStorage['guid'] + '/chaten',true);
-	set('users/' + localStorage['guid'] + '/onlineen',true);
-	set('users/' + localStorage['guid'] + '/cusor', true);
+if(get['users'][guid].chaten == undefined){
+	set('users/' + guid + '/chaten',true);
+	set('users/' + guid + '/onlineen',true);
+	set('users/' + guid + '/cusor', true);
 }
 
-curs.checked = get['users'][localStorage['guid']].cusor;
-onlineen.checked = get['users'][localStorage['guid']].onlineen;
-chaten.checked = get['users'][localStorage['guid']].chaten;
+curs.checked = get['users'][guid].cusor;
+onlineen.checked = get['users'][guid].onlineen;
+chaten.checked = get['users'][guid].chaten;
 
-curs.onchange = function(){ deleteCursors(); set('users' + localStorage['guid'] + '/cusor',curs.checked);}
+curs.onchange = function(){ deleteCursors(); set('users' + guid + '/cusor',curs.checked);}
 chaten.onchange = function(){
-	set('users/' + localStorage['guid'] + '/chaten',chaten.checked);
+	set('users/' + guid + '/chaten',chaten.checked);
 	hideChatOrOnline();
 }
 onlineen.onchange = function(){
-	set('users/' + localStorage['guid'] + '/onlineen',onlineen.checked);
+	set('users/' + guid + '/onlineen',onlineen.checked);
 	hideChatOrOnline();
 	
 }
@@ -571,7 +524,6 @@ fchat.onkeyup = function(e){
 		loadList('chat',getChat());
 		}else{
 			var cmd = fchat.value.split(' ');
-			if(cmd[0]=='/rst'){rst();}
 			if(cmd[0]=='/img'){
 				if(cmd.length==2){
 					draw = true;
@@ -633,24 +585,6 @@ function randW(){
 	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);	
 }
 
-function randNick(){
-var nico = 'SimaKyr';while(!findNickname(nico)){nico = randW();}return nico;
-}
-
-function findNickname(niks){
-	var i=1;
-	while(Number(get['users']['guid'].length)+1!=i){
-		if(get['users'][get['users']['guid'][i]].nickname == undefined){
-		set(get['users']['guid'][i] + '/nickname',randNick());	
-		}
-		if(get['users'][get['users']['guid'][i]].nickname == niks){
-			return false;
-		}
-		i++;
-	}
-	return true;
-}
-
 function deleteCursors(){
 var paras = document.getElementsByClassName('cursor');
 
@@ -658,17 +592,6 @@ while(paras[0]) {
     paras[0].parentNode.removeChild(paras[0]);
 }}
 
-nickset.value = nickname;
-
-sNick.onclick = function(){
-	if(findNickname(nickset.value)){
-		nickname = nickset.value;
-		set(localStorage['guid'] + '/nickname',nickname);
-	}
-	else{
-		alert('It nickname use other people')
-	}
-}
 function browserFullscreen(){return window.innerHeight == screen.height};
 
 window.onresize = function(){
@@ -721,6 +644,7 @@ firebase.database().ref(roomName).on('child_changed',function(){
 });
 
 setInterval( function(){set('users/'+ guid + '/uOnline',getUniversalTime());} ,1000);
-
-
-},2500);
+}else{
+alert('Please login in GameME for play game!');
+window.open("https://simakyr.github.io/gameME/","_self");
+}})},4000);
