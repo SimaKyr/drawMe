@@ -7,6 +7,10 @@ function getPosition(e, elementd) {
   }; 
 }
 
+function randW(){
+	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);	
+}
+
 roomName = 'main';
 
 window.onerror = function(error) {
@@ -46,12 +50,16 @@ function getUniversalTime(addmin){
 	}
 }
 	
+document.getElementById("a").style.display = 'none';
+
 function download(text, name, type) {
   var a = document.getElementById("a");
+  a.style.display = 'block';
   var file = new Blob([text], {type: type});
   a.href = URL.createObjectURL(file);
   a.download = name;
   a.click();
+  a.style.display = 'none';
 }
 
 var canvas = document.getElementById('canvas');
@@ -216,7 +224,12 @@ function componentToHex(c) {
 function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
-setTimeout(function(){
+var disableLoad = false;
+load = function(){
+
+if(disableLoad) return;
+if(!disableLoad) disableLoad = true;
+
 firebase.auth().onAuthStateChanged(function(user) {
 
 if (firebase.auth().currentUser !== null){
@@ -340,13 +353,9 @@ loadFromServer();
 
 document.onpointermove = function(e){
 	if(curs.checked){
-set(roomName + '/users/'+nickname + '/x',e.pageX);
-set(roomName + '/users/'+nickname + '/y',e.pageY);
-set(roomName + '/users/'+nickname + '/mouse',true);
-	}else{
-	set(roomName + '/users/'+nickname + '/mouse',false);	
-	}
-}
+set('users/' + guid + '/cursorX',e.pageX);
+set('users/' + guid + '/cursorY',e.pageY);
+}}
 
 canvas.onpointermove = function(e){
 	if(draw){
@@ -425,7 +434,7 @@ loadFromServer();
 }
 	}
 }
-canvas.onpointerup = function(){
+document.onpointerup = function(){
 	draw=false;
 	
 	if(instrument == 'line'){
@@ -572,17 +581,15 @@ function showCursors(){
 	var i=0;
 	deleteCursors();
 	while(i!=ceo.length){
-		if(get[roomName]['users'][ceo[i]] !=undefined){
+        if(get['users'][ceo[i]] != undefined){
+		if(get['users'][ceo[i]]['cursorX'] != undefined){
+        if(get['users'][ceo[i]]['cursorY'] != undefined){
+        if(get['users'][ceo[i]]['roomName'] == roomName){
 		if(ceo[i]!=nickname){
-		if(get[roomName]['users'][ceo[i]].mouse){
-		createCursor(get[roomName]['users'][ceo[i]].x,get[roomName]['users'][ceo[i]].y,ceo[i]);
-		}}}
+		createCursor(get['users'][ceo[i]]['cursorX'],get['users'][ceo[i]]['cursorY']);
+		}}}}}
 	i++;
 	}
-}
-
-function randW(){
-	return Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 10);	
 }
 
 function deleteCursors(){
@@ -621,7 +628,7 @@ if(!draw){loadFromServer();}
 
 updAll();
 
-firebase.database().ref(roomName + '/users').on('child_changed', function(snap){ 
+firebase.database().ref('users/').on('child_changed', function(snap){ 
 if(curs.checked){showCursors();}
 });
 
@@ -633,7 +640,7 @@ chat.lastElementChild.scrollIntoView();
 
 });
 
-
+set('users/' + guid + '/roomName',roomName);
 firebase.database().ref('users').on('child_changed', function(snap){ 
 loadList('onlinetab',matchOnline());
 });
@@ -647,4 +654,4 @@ setInterval( function(){set('users/'+ guid + '/uOnline',getUniversalTime());} ,1
 }else{
 alert('Please login in GameME for play game!');
 window.open("https://simakyr.github.io/gameME/","_self");
-}})},4000);
+}})};
